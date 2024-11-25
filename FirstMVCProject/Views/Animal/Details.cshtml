@@ -1,0 +1,40 @@
+﻿@using FirstMVCProject.Models.ViewModels
+@model DetailsAnimalViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Detalles del Animal</h1>
+
+<div>
+    <h3>@Model.AnimalDetail.NombreAnimal</h3>
+    <table class="table">
+        <tr>
+            <th>ID del Animal</th>
+            <td>@Model.AnimalDetail.IdAnimal</td>
+        </tr>
+        <tr>
+            <th>Nombre</th>
+            <td>@Model.AnimalDetail.NombreAnimal</td>
+        </tr>
+        <tr>
+            <th>Raza</th>
+            <td>@Model.AnimalDetail.Raza</td>
+        </tr>
+        <tr>
+            <th>Tipo de Animal</th>
+            <td>@Model.AnimalDetail.TipoAnimal?.TipoDescripcion</td> <!-- Muestra el nombre del tipo si está disponible -->
+        </tr>
+        <tr>
+            <th>Fecha de Nacimiento</th>
+            <td>@Model.AnimalDetail.FechaNacimiento?.ToString("dd/MM/yyyy")</td> <!-- Formatea la fecha si está disponible -->
+        </tr>
+    </table>
+</div>
+
+<div>
+    <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Volver a la lista</a>
+</div>
+
+

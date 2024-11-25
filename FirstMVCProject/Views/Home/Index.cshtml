@@ -1,0 +1,25 @@
+﻿ @using FirstMVCProject.Models.ViewModels
+ @model AnimalesViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<h1>Lista de Animales</h1>
+<form asp-action="AnimalCreate" asp-controller="Animal" style="display:inline;">
+    <button type="submit" class="btn btn-primary" value="Create">Añadir</button>
+</form>
+<ul>
+    @foreach(var animal in Model.Animals)
+    {
+        <li><span class="animal-id">ID @animal.IdAnimal: </span>@animal.NombreAnimal</li>
+        <form asp-action="AnimalDetail" asp-controller="Animal" method="post" style="display:inline;">
+            <input type="hidden" name="id" value="@animal.IdAnimal" />
+            <button type="submit" class="btn btn-primary">Ver Detalles</button>
+        </form>
+    }
+</ul>

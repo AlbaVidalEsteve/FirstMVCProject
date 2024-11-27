@@ -1,0 +1,31 @@
+﻿@model FirstMVCProject.Models.Animal
+
+<h2>Crear Animal</h2>
+
+<form asp-action="SaveAnimal" method="post">
+    <div class="form-group">
+        <label asp-for="NombreAnimal" class="control-label"></label>
+        <input asp-for="NombreAnimal" class="form-control" required/>
+        <span asp-validation-for="NombreAnimal" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="RIdTipoAnimal" class="control-label">Tipo de Animal</label>
+        <select asp-for="RIdTipoAnimal" class="form-control" asp-items="ViewBag.TipoAnimales" required></select>
+        <span asp-validation-for="RIdTipoAnimal" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Raza" class="control-label"></label>
+        <input asp-for="Raza" class="form-control" />
+        <span asp-validation-for="Raza" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="FechaNacimiento" class="control-label"></label>
+        <input asp-for="FechaNacimiento" class="form-control" type="date" />
+        <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
+    </div>
+    <input type="hidden" asp-for="IdAnimal" />
+    <button type="submit" class="btn btn-primary" >Guardar</button>
+</form>

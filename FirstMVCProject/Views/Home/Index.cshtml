@@ -10,16 +10,24 @@
 </div>
 
 <h1>Lista de Animales</h1>
-<form asp-action="AnimalCreate" asp-controller="Animal" style="display:inline;">
-    <button type="submit" class="btn btn-primary" value="Create">Añadir</button>
+<form asp-action="ShowAnimalEdit" asp-controller="Animal" style="display:inline;">
+    <button type="submit" class="btn btn-primary">Añadir</button>
 </form>
 <ul>
     @foreach(var animal in Model.Animals)
     {
         <li><span class="animal-id">ID @animal.IdAnimal: </span>@animal.NombreAnimal</li>
         <form asp-action="AnimalDetail" asp-controller="Animal" method="post" style="display:inline;">
-            <input type="hidden" name="id" value="@animal.IdAnimal" />
+            <input type="hidden" name="id" value="@animal.IdAnimal"/>
             <button type="submit" class="btn btn-primary">Ver Detalles</button>
         </form>
+        <form asp-action="ShowAnimalEdit" asp-controller="Animal" method="post" style="display:inline;">
+            <input type="hidden" name="idAnimal" value="@animal.IdAnimal" />
+            <button type="submit" class="btn btn-warning">Editar</button>
+        </form>
+       @*  <form asp-action="ShowAnimalEdit" asp-controller="Animal" method="post" style="display:inline;">
+            <input type="hidden" name="id" value="@animal.IdAnimal"/>
+            <button type="button" class="btn btn-primary">Editar</button>
+        </form> *@
     }
 </ul>

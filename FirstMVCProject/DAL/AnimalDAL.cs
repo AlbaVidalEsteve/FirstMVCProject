@@ -17,33 +17,47 @@ namespace FirstMVCProject.DAL
         }
 
         public List<Animal> GetAll()
-        {   
+        {
             List<Animal> animals = new List<Animal>();
-            TipoAnimalDAL tipoAnimalDAL = new TipoAnimalDAL();
-            
-            
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                string sqlQuery = "SELECT * FROM Animal";
-                SqlCommand cmd = new SqlCommand(sqlQuery, conn);
-                conn.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
 
-                while (reader.Read())
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    Animal animal = new Animal
+                    string sqlQuery = @"
+                SELECT a.IdAnimal, a.NombreAnimal, a.Raza, a.RIdTipoAnimal, a.FechaNacimiento,
+                       t.IdTipoAnimal, t.TipoDescripcion 
+                FROM Animal a
+                LEFT JOIN TipoAnimal t ON a.RIdTipoAnimal = t.IdTipoAnimal";
+                    SqlCommand cmd = new SqlCommand(sqlQuery, conn);
+                    conn.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
                     {
-                        IdAnimal = Convert.ToInt32(reader["IdAnimal"]),
-                        NombreAnimal = reader["NombreAnimal"].ToString(),
-                        Raza = reader["Raza"]?.ToString(),
-                        RIdTipoAnimal = Convert.ToInt32(reader["RIdTipoAnimal"]),
-                        FechaNacimiento = reader["FechaNacimiento"] != DBNull.Value ? Convert.ToDateTime(reader["FechaNacimiento"]) : null,
-                        TipoAnimal = tipoAnimalDAL.GetById(Convert.ToInt32(reader["RIdTipoAnimal"]))
-                    };
-                    animals.Add(animal);
+                        Animal animal = new Animal
+                        {
+                            IdAnimal = Convert.ToInt32(reader["IdAnimal"]),
+                            NombreAnimal = reader["NombreAnimal"].ToString(),
+                            Raza = reader["Raza"]?.ToString(),
+                            RIdTipoAnimal = Convert.ToInt32(reader["RIdTipoAnimal"]),
+                            FechaNacimiento = reader["FechaNacimiento"] != DBNull.Value ? Convert.ToDateTime(reader["FechaNacimiento"]) : null,
+                            TipoAnimal = new TipoAnimal
+                            {
+                                IdTipoAnimal = Convert.ToInt32(reader["IdTipoAnimal"]),
+                                TipoDescripcion = reader["TipoDescripcion"].ToString()
+                            }
+                        };
+                        animals.Add(animal);
+                    }
                 }
-                return animals;
             }
+            catch (SqlException ex)
+            {
+                throw new Exception("Error al obtener la lista de animales.", ex);
+            }
+
+            return animals;
         }
 
         public Animal GetById(int id)
@@ -93,7 +107,7 @@ namespace FirstMVCProject.DAL
                     VALUES (@NombreAnimal, @Raza, @RIdTipoAnimal, @FechaNacimiento)";
                 SqlCommand cmd = new SqlCommand(sqlQuery, conn);
                 cmd.Parameters.AddWithValue("@NombreAnimal", animal.NombreAnimal);
-                cmd.Parameters.AddWithValue("@Raza", animal.Raza);
+                cmd.Parameters.AddWithValue("@Raza", string.IsNullOrEmpty(animal.Raza) ? (object)DBNull.Value : animal.Raza);
                 cmd.Parameters.AddWithValue("@RIdTipoAnimal", animal.RIdTipoAnimal);
                 cmd.Parameters.AddWithValue("@FechaNacimiento", animal.FechaNacimiento.HasValue ? (object)animal.FechaNacimiento.Value : DBNull.Value);
                 conn.Open();

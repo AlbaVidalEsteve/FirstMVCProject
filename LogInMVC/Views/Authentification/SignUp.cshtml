@@ -1,0 +1,67 @@
+﻿@model LogInMVC.Models.ViewModels.SignUpViewModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sign Up</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h3>Crear Cuenta</h3>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="SignUp" method="post" asp-antiforgery="true">                            
+
+                            <!-- Nombre de usuario -->
+                            <div class="form-group mb-3">
+                                <label asp-for="UserName" class="form-label"></label>
+                                <input asp-for="UserName" class="form-control" />
+                                <span asp-validation-for="UserName" class="text-danger"></span>
+                            </div>
+
+                            <!-- Contraseña -->
+                            <div class="form-group mb-3">
+                                <label asp-for="Password" class="form-label"></label>
+                                <input asp-for="Password" class="form-control" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+
+                            <!-- Confirmar contraseña -->
+                            <div class="form-group mb-3">
+                                <label asp-for="ConfirmPassword" class="form-label"></label>
+                                <input asp-for="ConfirmPassword" class="form-control" />
+                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            </div>
+
+                            <!-- Botón de envío -->
+                            <div class="form-group d-grid">
+                                <button type="submit" class="btn btn-primary">Registrarse</button>
+                            </div>
+
+                            <!-- Resumen de errores -->
+                            <div asp-validation-summary="All" class="text-danger mb-3"></div>                        
+               
+                        </form>
+                        <!-- Botón para redirigir al Login -->
+                        <div class="text-center">
+                            <p>¿Ya tienes una cuenta?</p>
+                            <a asp-controller="Authentification" asp-action="Login" class="btn btn-secondary">Iniciar Sesión</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

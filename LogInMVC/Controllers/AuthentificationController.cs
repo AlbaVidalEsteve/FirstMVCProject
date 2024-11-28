@@ -32,5 +32,35 @@ namespace LogInMVC.Controllers
             }
             return View(model);
         }
+        public IActionResult SignUp()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SignUp(SignUpViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                UsuarioDAL dal = new UsuarioDAL();
+                Usuario usuario = new Usuario();
+
+                usuario.UserName = model.UserName;
+                usuario.Password = model.Password;
+
+                dal.CreateUsuario(usuario);
+
+                Usuario validarCreacion = dal.GetUsuarioLogin(model.UserName, model.Password);
+                // Validar usuario
+                if(validarCreacion != null)
+                {
+                    HttpContext.Session.SetString("UserName", usuario.UserName);
+                    return RedirectToAction("Index", "Home");
+                }
+                ModelState.AddModelError("", "No se ha podido crear usuario");
+            }
+            return View(model);
+        }
     }
 }

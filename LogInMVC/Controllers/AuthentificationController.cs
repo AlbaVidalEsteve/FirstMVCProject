@@ -1,4 +1,6 @@
-﻿using LogInMVC.Models.ViewModels;
+﻿using LogInMVC.DAL;
+using LogInMVC.Models;
+using LogInMVC.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LogInMVC.Controllers
@@ -16,9 +18,12 @@ namespace LogInMVC.Controllers
         {
             if (ModelState.IsValid)
             {
+                UsuarioDAL dal = new UsuarioDAL();
+                Usuario usuario = dal.GetUsuarioLogin(model.Username, model.Password);
                 //Validar usuari
-                if (model.Username == "admin" && model.Password == "password")
+                if (usuario != null)
                 {
+                    HttpContext.Session.SetString("Username", model.Username);
                     //Autentificación exitosa
                     return RedirectToAction("Index", "Home");
                 }

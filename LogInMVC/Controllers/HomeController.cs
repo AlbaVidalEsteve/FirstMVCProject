@@ -15,6 +15,13 @@ namespace LogInMVC.Controllers
 
         public IActionResult Index()
         {
+            string username = HttpContext.Session.GetString("Username");
+            if (string.IsNullOrEmpty(username))
+            {
+                return RedirectToAction("Login", "Authentification");
+            
+            }
+            ViewBag.Username = username;
             return View();
         }
 

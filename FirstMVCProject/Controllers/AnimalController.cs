@@ -50,11 +50,6 @@ namespace FirstMVCProject.Controllers
             return RedirectToAction("Index", "Home"); //Redirigir si no hay datos           
         }
         
-        //public IActionResult ShowAnimalCreate()
-        //{
-            
-        //    return RedirectToAction("Form", "Animal");
-        //}
 
         [HttpPost]
         public ActionResult ShowAnimalEdit(int idAnimal)

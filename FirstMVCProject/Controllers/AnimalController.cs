@@ -3,6 +3,7 @@ using FirstMVCProject.Models;
 using FirstMVCProject.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 
 namespace FirstMVCProject.Controllers
 {
@@ -25,54 +26,63 @@ namespace FirstMVCProject.Controllers
         [HttpPost]
         public IActionResult AnimalDetail(int id)
         {
+            DetailsAnimalViewModel vm = new DetailsAnimalViewModel();
+            vm.AnimalDetail = _animalDAL.GetById(id);
+            TempData["Animal"] = JsonConvert.SerializeObject(vm);
+
             return RedirectToAction("Details", "Animal", new { id });
-        }       
+        }
 
         [HttpGet]
-        public ActionResult Details(int id)
-        { 
-            AnimalDAL dal = new AnimalDAL();
-            DetailsAnimalViewModel vm = new DetailsAnimalViewModel();
-            vm.AnimalDetail = dal.GetById(id);
-
-            if (vm.AnimalDetail == null) 
+        public ActionResult Details()
+        {
+            if (TempData["Animal"] != null)
             {
-                return NotFound();
+                var json = TempData["Animal"] as string;
+                var vm = JsonConvert.DeserializeObject<DetailsAnimalViewModel>(json);
+                if (vm == null ||vm.AnimalDetail.IdAnimal ==0 ) 
+                {
+                    ViewBag.NoAnimal = "No se ha encontrado ningún animal.";
+                
+                }
+                return View(vm);
             }
-            return View(vm);            
+            return RedirectToAction("Index", "Home"); //Redirigir si no hay datos           
         }
         
-        public IActionResult ShowAnimalCreate()
-        {
-            return RedirectToAction("Form", "Animal");
-        }
+        //public IActionResult ShowAnimalCreate()
+        //{
+            
+        //    return RedirectToAction("Form", "Animal");
+        //}
 
         [HttpPost]
         public ActionResult ShowAnimalEdit(int idAnimal)
         {
-            return RedirectToAction("Form", "Animal", new { idAnimal });
+            Animal animalToEdit = _animalDAL.GetById(idAnimal);
+            if (animalToEdit == null)
+            {
+                ViewBag.NoAnimal = "No se ha encontrado ningún animal.";
+            }
+            
+            TempData["Animal"] = JsonConvert.SerializeObject(animalToEdit);
+            return RedirectToAction("Form", "Animal");
         }
 
         [HttpGet]
-        public IActionResult Form(int idAnimal)
+        public IActionResult Form()
         {
-            if (idAnimal == 0) //Desde el boton create
+            var json = TempData["Animal"] as string;
+            var animalToEdit = JsonConvert.DeserializeObject<Animal>(json);
+            if (animalToEdit == null) //Desde el boton create
             {
                 var tiposAnimales = _tipoAnimalDAL.GetAll();
-                        
                 ViewBag.TipoAnimales = new SelectList(tiposAnimales, "IdTipoAnimal", "TipoDescripcion");
 
                 return View(new Animal());
             }
             else //Desde el boton edit
             {
-                Animal animalToEdit = _animalDAL.GetById(idAnimal);
-
-                if (animalToEdit == null)
-                {
-                    return NotFound();
-                }
-
                 var tiposAnimales = _tipoAnimalDAL.GetAll();
 
                 ViewBag.TipoAnimales = new SelectList(tiposAnimales, "IdTipoAnimal", "TipoDescripcion", animalToEdit.RIdTipoAnimal);

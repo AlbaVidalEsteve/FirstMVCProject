@@ -4,6 +4,13 @@
 @{
     ViewData["Title"] = "Details";
 }
+@{
+    var errorMessage = ViewBag.NoAnimal as string;
+}
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger" role="alert">@errorMessage</div>
+}
 
 <h1>Detalles del Animal</h1>
 
